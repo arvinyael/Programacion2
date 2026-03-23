@@ -3,7 +3,6 @@ package clases;
 public class Vector {
     private double x, y, z;
 
-    // Constructores
     public Vector() {
         this(0, 0, 0);
     }
@@ -18,7 +17,7 @@ public class Vector {
         this(v.x, v.y, v.z);
     }
 
-    // Getters y Setters
+    
     public double getX() { return x; }
     public double getY() { return y; }
     public double getZ() { return z; }
@@ -27,45 +26,37 @@ public class Vector {
     public void setY(double y) { this.y = y; }
     public void setZ(double z) { this.z = z; }
 
-    // Norma (longitud)
-    public double norma() {
+    public double longitud() {
         return Math.sqrt(x*x + y*y + z*z);
     }
 
-    // Normalización (retorna un nuevo vector normalizado)
-    public Vector normalizar() {
-        double n = norma();
+    public Vector normal() {
+        double n = longitud();
         if (n == 0) return new Vector(this);
         return new Vector(x / n, y / n, z / n);
     }
 
-    // Suma de vectores
     public Vector suma(Vector v) {
         return new Vector(x + v.x, y + v.y, z + v.z);
     }
 
-    // Resta de vectores
     public Vector resta(Vector v) {
         return new Vector(x - v.x, y - v.y, z - v.z);
     }
 
-    // Multiplicación por escalar
     public Vector multiplicarEscalar(double k) {
         return new Vector(x * k, y * k, z * k);
     }
 
-    // División por escalar
     public Vector dividirEscalar(double k) {
         if (k == 0) return new Vector(this);
         return new Vector(x / k, y / k, z / k);
     }
 
-    // Producto escalar (dot)
     public double productoEscalar(Vector v) {
         return x * v.x + y * v.y + z * v.z;
     }
 
-    // Producto vectorial (cross)
     public Vector productoVectorial(Vector v) {
         return new Vector(
             y * v.z - z * v.y,
@@ -73,37 +64,22 @@ public class Vector {
             x * v.y - y * v.x
         );
     }
-
-    // Proyección ortogonal de este vector sobre otro
+    
     public Vector proyeccionSobre(Vector v) {
-        double normaV = v.norma();
+        double normaV = v.longitud();
         if (normaV == 0) return new Vector();
-        double factor = productoEscalar(v) / (normaV * normaV);
-        return new Vector(v.x * factor, v.y * factor, v.z * factor);
+        double fact = productoEscalar(v) / (normaV * normaV);
+        return new Vector(v.x * fact, v.y * fact, v.z * fact);
     }
 
-    // Componente (proyección escalar) de este vector sobre otro
     public double componenteEn(Vector v) {
-        double n = v.norma();
+        double n = v.longitud();
         if (n == 0) return 0;
         return productoEscalar(v) / n;
     }
 
-    // Verifica si este vector es perpendicular a otro (tolerancia 1e-9)
     public boolean esPerpendicular(Vector v) {
-        return Math.abs(productoEscalar(v)) < 1e-9;
-    }
-
-    // Comparación (con tolerancia) 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Vector v = (Vector) obj;
-        final double EPS = 1e-9;
-        return Math.abs(x - v.x) < EPS &&
-               Math.abs(y - v.y) < EPS &&
-               Math.abs(z - v.z) < EPS;
+        return Math.abs(productoEscalar(v)) == 0;
     }
 
     @Override
@@ -116,7 +92,7 @@ public class Vector {
 
         System.out.println("Vector a = " + a);
         System.out.println("Vector b = " + b);
-        System.out.println("Norma de a: " + a.norma());
+        System.out.println("Norma de a: " + a.longitud());
 
         Vector suma = a.suma(b);
         System.out.println("a + b = " + suma);
@@ -140,15 +116,17 @@ public class Vector {
         System.out.println("Proyección de a sobre b = " + proy);
         System.out.println("Componente de a en dirección de b = " + a.componenteEn(b));
 
-        Vector an = a.normalizar();
+        Vector an = a.normal();
         System.out.println("Vector a normalizado = " + an);
-        System.out.println("Norma del normalizado: " + an.norma());
+        System.out.println("Norma del normalizado: " + an.longitud());
 
         Vector c = new Vector(1, 2, 3);
         Vector d = new Vector(4, -5, 2);
         System.out.println("c = " + c + ", d = " + d);
-        System.out.println("c·d = " + c.productoEscalar(d) + " => " +
-                (c.esPerpendicular(d) ? "son perpendiculares" : "no son perpendiculares"));
+        if (c.productoEscalar(d)== 0){
+            System.out.println ("los vectores: " + c + " y " + d + "son perpendiculares"); 
+        }
+        else System.out.println ("los vectores: " + c + " y " + d + "NO son perpendiculares"); 
     }
 
 }
